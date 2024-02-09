@@ -36,7 +36,16 @@ app.delete("/api/v1/books/:id", (req, res) => {
     books.splice(index, 1);
     res.send({ message: 'delete' });
 })
-
+app.patch("/api/v1/books/:id", (req, res) => {
+    const id = req.params.id.toString(); 
+    const updateFields = req.body;
+    const bookToUpdate = books.find(book => book.id == id);
+    if (!bookToUpdate) {
+        return res.status(404).send({ message: 'Book not found' });
+    }
+    Object.assign(bookToUpdate, updateFields);
+    res.send({ message: 'update', data: bookToUpdate });
+});
 
 
 //!tasks
@@ -68,17 +77,11 @@ app.delete("/api/v1/tasks/:id", (req, res) => {
 app.patch("/api/v1/tasks/:id", (req, res) => {
     const id = req.params.id.toString(); // Ensure id is a string
     const updateFields = req.body;
-
-    // Find the task to update by ID
     const taskToUpdate = tasks.find(task => task.id == id);
-
     if (!taskToUpdate) {
         return res.status(404).send({ message: 'Task not found' });
     }
-
-    // Update each field provided in the request body
     Object.assign(taskToUpdate, updateFields);
-
     res.send({ message: 'update', data: taskToUpdate });
 });
 
